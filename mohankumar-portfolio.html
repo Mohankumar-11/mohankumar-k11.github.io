@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mohankumar K — EEE Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #080c10;
+    --surface: #0d1218;
+    --card: #111820;
+    --border: #1e2d3d;
+    --accent: #f0a500;
+    --accent2: #00d4ff;
+    --accent3: #39ff14;
+    --text: #e8f0f8;
+    --muted: #6b8099;
+    --glow: rgba(240,165,0,0.15);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Rajdhani', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    overflow-x: hidden;
+    cursor: none;
+  }
+
+  /* Custom Cursor */
+  .cursor {
+    position: fixed; width: 12px; height: 12px;
+    background: var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9999;
+    transform: translate(-50%,-50%);
+    transition: transform 0.1s, width 0.2s, height 0.2s, background 0.2s;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed; width: 40px; height: 40px;
+    border: 1.5px solid var(--accent); border-radius: 50%;
+    pointer-events: none; z-index: 9998;
+    transform: translate(-50%,-50%);
+    transition: transform 0.15s ease, width 0.3s, height 0.3s;
+  }
+
+  /* Noise overlay */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    pointer-events: none; z-index: 1000; opacity: 0.4;
+  }
+
+  /* Circuit background */
+  .circuit-bg {
+    position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    opacity: 0.06;
+    background-image:
+      linear-gradient(var(--accent2) 1px, transparent 1px),
+      linear-gradient(90deg, var(--accent2) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .circuit-bg::after {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 60% 60% at 20% 30%, rgba(0,212,255,0.05) 0%, transparent 70%),
+                radial-gradient(ellipse 50% 50% at 80% 70%, rgba(240,165,0,0.05) 0%, transparent 70%);
+  }
+
+  /* Nav */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 1.2rem 4rem;
+    background: rgba(8,12,16,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 1.1rem;
+    color: var(--accent); letter-spacing: 0.05em;
+  }
+  .nav-logo span { color: var(--text); }
+  .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+  .nav-links a {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    color: var(--muted); text-decoration: none;
+    text-transform: uppercase;
+    transition: color 0.2s;
+    position: relative;
+  }
+  .nav-links a::before {
+    content: '//'; margin-right: 0.3em;
+    color: var(--accent); opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-links a:hover::before { opacity: 1; }
+
+  /* Sections */
+  section { position: relative; z-index: 1; }
+
+  /* Hero */
+  #hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 8rem 4rem 4rem;
+    position: relative; overflow: hidden;
+  }
+  .hero-orb {
+    position: absolute; border-radius: 50%;
+    filter: blur(120px); pointer-events: none;
+  }
+  .orb1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(240,165,0,0.12) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation: orb-drift 8s ease-in-out infinite;
+  }
+  .orb2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(0,212,255,0.08) 0%, transparent 70%);
+    bottom: 0; left: -100px;
+    animation: orb-drift 10s ease-in-out infinite reverse;
+  }
+  @keyframes orb-drift {
+    0%,100% { transform: translate(0,0); }
+    50% { transform: translate(30px, -30px); }
+  }
+
+  .hero-content { max-width: 900px; }
+
+  .hero-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.2em;
+    color: var(--accent2); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex; align-items: center; gap: 1rem;
+    animation: fade-up 0.8s ease both;
+  }
+  .hero-tag::before {
+    content: ''; flex: 0 0 40px; height: 1px;
+    background: var(--accent2);
+  }
+
+  .hero-name {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    font-weight: 800; line-height: 0.9;
+    letter-spacing: -0.02em;
+    animation: fade-up 0.8s 0.1s ease both;
+  }
+  .hero-name .highlight {
+    color: transparent;
+    -webkit-text-stroke: 2px var(--accent);
+    display: block;
+  }
+
+  .hero-role {
+    margin-top: 1.5rem;
+    font-size: 1.2rem; color: var(--muted);
+    letter-spacing: 0.05em;
+    animation: fade-up 0.8s 0.2s ease both;
+  }
+
+  .hero-stats {
+    display: flex; gap: 3rem; margin-top: 3rem;
+    animation: fade-up 0.8s 0.3s ease both;
+  }
+  .stat-item { display: flex; flex-direction: column; }
+  .stat-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.2rem; font-weight: 800;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--muted); text-transform: uppercase;
+    margin-top: 0.2rem;
+  }
+
+  .hero-cta {
+    display: flex; gap: 1.2rem; margin-top: 3rem;
+    animation: fade-up 0.8s 0.4s ease both;
+  }
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem; letter-spacing: 0.1em;
+    padding: 0.85rem 2rem;
+    text-transform: uppercase; text-decoration: none;
+    border: none; cursor: pointer;
+    transition: all 0.25s;
+    display: inline-flex; align-items: center; gap: 0.5rem;
+  }
+  .btn-primary {
+    background: var(--accent); color: #000;
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-primary:hover {
+    background: #ffb800;
+    box-shadow: 0 0 30px rgba(240,165,0,0.4);
+    transform: translateY(-2px);
+  }
+  .btn-outline {
+    background: transparent; color: var(--text);
+    border: 1px solid var(--border);
+    clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+  }
+  .btn-outline:hover {
+    border-color: var(--accent2);
+    color: var(--accent2);
+    box-shadow: 0 0 20px rgba(0,212,255,0.15);
+  }
+
+  /* Scroll indicator */
+  .scroll-indicator {
+    position: absolute; bottom: 3rem; left: 4rem;
+    display: flex; flex-direction: column; align-items: center; gap: 0.5rem;
+    animation: fade-up 0.8s 0.5s ease both;
+  }
+  .scroll-line {
+    width: 1px; height: 60px;
+    background: linear-gradient(to bottom, var(--accent), transparent);
+    animation: scroll-pulse 2s ease-in-out infinite;
+  }
+  .scroll-text {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+    writing-mode: vertical-rl;
+  }
+  @keyframes scroll-pulse {
+    0%,100% { opacity: 0.3; transform: scaleY(1); }
+    50% { opacity: 1; transform: scaleY(1.2); }
+  }
+
+  /* Section styles */
+  .section-wrap { padding: 6rem 4rem; }
+  .section-header {
+    display: flex; align-items: center; gap: 1.5rem;
+    margin-bottom: 4rem;
+  }
+  .section-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.2em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .section-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 2.8rem; font-weight: 800;
+    letter-spacing: -0.02em;
+  }
+  .section-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(to right, var(--border), transparent);
+  }
+
+  /* About */
+  #about { background: var(--surface); }
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 5rem; align-items: center;
+  }
+  .about-text p {
+    font-size: 1.1rem; line-height: 1.8;
+    color: var(--muted); margin-bottom: 1.2rem;
+  }
+  .about-text p strong { color: var(--text); }
+  .info-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 1rem; margin-top: 2rem;
+  }
+  .info-item {
+    padding: 1rem 1.2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
+  }
+  .info-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .info-val { font-size: 0.9rem; color: var(--text); }
+
+  /* Skills */
+  .skills-panel {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2.5rem;
+    position: relative;
+  }
+  .skills-panel::before {
+    content: 'SKILL MATRIX';
+    position: absolute; top: -0.6rem; left: 1.5rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: var(--accent2);
+    background: var(--card); padding: 0 0.5rem;
+  }
+  .skill-category { margin-bottom: 1.5rem; }
+  .skill-cat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--muted); text-transform: uppercase;
+    margin-bottom: 0.8rem;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .skill-tag {
+    padding: 0.35rem 0.85rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.7rem; letter-spacing: 0.05em;
+    border: 1px solid var(--border);
+    color: var(--text);
+    transition: all 0.2s;
+    cursor: default;
+  }
+  .skill-tag:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glow);
+  }
+  .skill-tag.tool { border-color: rgba(0,212,255,0.3); color: var(--accent2); }
+  .skill-tag.tool:hover { background: rgba(0,212,255,0.08); }
+  .skill-tag.lang { border-color: rgba(57,255,20,0.3); color: var(--accent3); }
+
+  /* Education */
+  #education { background: var(--bg); }
+  .timeline { position: relative; padding-left: 2rem; }
+  .timeline::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+    width: 1px; background: linear-gradient(to bottom, var(--accent), var(--border), transparent);
+  }
+  .timeline-item {
+    position: relative; padding: 0 0 3rem 2.5rem;
+  }
+  .timeline-dot {
+    position: absolute; left: -0.45rem; top: 0.3rem;
+    width: 10px; height: 10px;
+    background: var(--accent); border-radius: 50%;
+    box-shadow: 0 0 12px var(--accent);
+  }
+  .timeline-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.15em;
+    color: var(--accent2); text-transform: uppercase;
+    margin-bottom: 0.5rem;
+  }
+  .timeline-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.3rem; font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .timeline-sub { font-size: 0.95rem; color: var(--muted); margin-bottom: 0.5rem; }
+  .timeline-badge {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    padding: 0.25rem 0.7rem;
+    background: rgba(240,165,0,0.1);
+    border: 1px solid rgba(240,165,0,0.3);
+    color: var(--accent);
+  }
+
+  /* Projects */
+  #projects { background: var(--surface); }
+  .projects-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+  .project-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    padding: 2rem;
+    position: relative; overflow: hidden;
+    transition: border-color 0.3s, transform 0.3s;
+    cursor: default;
+  }
+  .project-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform 0.3s;
+  }
+  .project-card:hover { border-color: rgba(240,165,0,0.3); transform: translateY(-4px); }
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--muted); margin-bottom: 1rem;
+  }
+  .project-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.2rem; font-weight: 700;
+    margin-bottom: 0.8rem; color: var(--text);
+  }
+  .project-desc { font-size: 0.95rem; line-height: 1.7; color: var(--muted); }
+  .project-award {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    margin-top: 1.2rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase;
+  }
+
+  /* Experience */
+  #experience { background: var(--bg); }
+  .exp-grid { display: grid; gap: 1.2rem; }
+  .exp-card {
+    display: grid; grid-template-columns: auto 1fr;
+    gap: 2rem; align-items: start;
+    padding: 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: border-color 0.3s;
+  }
+  .exp-card:hover { border-color: rgba(0,212,255,0.3); }
+  .exp-period {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--muted); text-transform: uppercase;
+    white-space: nowrap; padding-top: 0.3rem;
+    min-width: 100px;
+  }
+  .exp-role {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.15rem; font-weight: 700;
+    margin-bottom: 0.2rem;
+  }
+  .exp-company { font-size: 0.9rem; color: var(--accent2); margin-bottom: 0.5rem; }
+  .exp-desc { font-size: 0.9rem; color: var(--muted); line-height: 1.6; }
+
+  /* Awards & Publications */
+  #recognition { background: var(--surface); }
+  .recognition-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+  .recog-block { }
+  .recog-block-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--accent2); text-transform: uppercase;
+    margin-bottom: 1.2rem;
+    display: flex; align-items: center; gap: 0.8rem;
+  }
+  .recog-block-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+  .recog-item {
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    margin-bottom: 1rem;
+    position: relative; overflow: hidden;
+  }
+  .recog-item::after {
+    content: ''; position: absolute;
+    top: 0; left: 0; bottom: 0; width: 3px;
+    background: var(--accent);
+  }
+  .recog-item.pub::after { background: var(--accent2); }
+  .recog-item.patent::after { background: var(--accent3); }
+  .recog-icon { font-size: 1.5rem; margin-bottom: 0.6rem; }
+  .recog-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+  .recog-detail { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+  .recog-tag {
+    display: inline-block; margin-top: 0.6rem;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.1em;
+    padding: 0.2rem 0.5rem;
+    background: rgba(57,255,20,0.08);
+    border: 1px solid rgba(57,255,20,0.25);
+    color: var(--accent3);
+  }
+
+  /* Certifications */
+  #certifications { background: var(--bg); }
+  .cert-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+  .cert-card {
+    padding: 1.5rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    transition: all 0.3s;
+  }
+  .cert-card:hover {
+    border-color: rgba(240,165,0,0.4);
+    box-shadow: 0 0 20px rgba(240,165,0,0.08);
+  }
+  .cert-org {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.6rem; letter-spacing: 0.2em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 0.6rem;
+  }
+  .cert-name {
+    font-size: 0.95rem; font-weight: 600;
+    color: var(--text); line-height: 1.4;
+  }
+
+  /* Activities */
+  #activities { background: var(--surface); }
+  .activities-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; }
+  .act-group-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.2em;
+    color: var(--accent2); text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .act-item {
+    display: flex; gap: 1rem;
+    padding: 0.8rem 0;
+    border-bottom: 1px solid rgba(30,45,61,0.5);
+    font-size: 0.9rem; color: var(--muted); line-height: 1.5;
+    align-items: flex-start;
+  }
+  .act-item::before {
+    content: '▸'; color: var(--accent); flex-shrink: 0; margin-top: 0.1rem;
+  }
+
+  /* Contact */
+  #contact {
+    background: var(--bg);
+    padding: 6rem 4rem;
+    text-align: center;
+  }
+  .contact-heading {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 800; margin-bottom: 1rem;
+  }
+  .contact-sub {
+    font-size: 1.1rem; color: var(--muted); margin-bottom: 3rem;
+  }
+  .contact-links {
+    display: flex; justify-content: center;
+    flex-wrap: wrap; gap: 1.2rem;
+  }
+  .contact-link {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 1rem 2rem;
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--text); text-decoration: none;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem; letter-spacing: 0.05em;
+    transition: all 0.25s;
+  }
+  .contact-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    box-shadow: 0 0 20px rgba(240,165,0,0.15);
+    transform: translateY(-2px);
+  }
+  .contact-link .icon { font-size: 1rem; }
+
+  /* Footer */
+  footer {
+    text-align: center; padding: 2rem;
+    border-top: 1px solid var(--border);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.65rem; letter-spacing: 0.1em;
+    color: var(--muted);
+  }
+
+  /* Animations */
+  @keyframes fade-up {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .reveal {
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* Responsive */
+  @media (max-width: 900px) {
+    nav { padding: 1rem 2rem; }
+    .nav-links { display: none; }
+    #hero { padding: 7rem 2rem 4rem; }
+    .section-wrap { padding: 4rem 2rem; }
+    .about-grid, .recognition-grid, .activities-cols { grid-template-columns: 1fr; gap: 2rem; }
+    .hero-stats { gap: 2rem; flex-wrap: wrap; }
+    .exp-card { grid-template-columns: 1fr; gap: 0.5rem; }
+    #contact { padding: 4rem 2rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="circuit-bg"></div>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-logo">MK<span>.</span></div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#recognition">Recognition</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+  <div class="hero-content">
+    <div class="hero-tag">EEE Engineer &amp; Innovator</div>
+    <h1 class="hero-name">
+      Mohankumar<span class="highlight">K.</span>
+    </h1>
+    <p class="hero-role">B.E Electrical &amp; Electronics Engineering · CGPA 8.23</p>
+    <div class="hero-stats">
+      <div class="stat-item">
+        <span class="stat-num">4</span>
+        <span class="stat-label">Projects</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">1</span>
+        <span class="stat-label">IEEE Paper</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">1</span>
+        <span class="stat-label">Patent Filed</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3+</span>
+        <span class="stat-label">Internships</span>
+      </div>
+    </div>
+    <div class="hero-cta">
+      <a href="mailto:mohankumark1104@gmail.com" class="btn btn-primary">→ Get In Touch</a>
+      <a href="https://linkedin.com/in/mohankumar-k11" target="_blank" class="btn btn-outline">LinkedIn Profile</a>
+    </div>
+  </div>
+  <div class="scroll-indicator">
+    <div class="scroll-line"></div>
+    <div class="scroll-text">Scroll</div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">01</span>
+      <h2 class="section-title">About</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I'm <strong>Mohankumar K</strong>, a final-year Electrical and Electronics Engineering student at K S Rangasamy College of Technology with a CGPA of <strong>8.23</strong>. I thrive at the intersection of hardware design, power systems, and embedded intelligence.</p>
+        <p>My work has been recognized with a <strong>Best Paper Award</strong> at a national conference, an <strong>IEEE publication</strong>, and a <strong>filed patent</strong> — all centered on my LabVIEW-based UPS monitoring system.</p>
+        <p>Currently interning as a <strong>Hardware Engineer</strong> at Rennova Solutions, designing and developing ATE machines for industrial testing.</p>
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="info-label">Location</div>
+            <div class="info-val">Dharmapuri, Tamil Nadu</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Email</div>
+            <div class="info-val">mohankumark1104@gmail.com</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Phone</div>
+            <div class="info-val">+91 9361735108</div>
+          </div>
+          <div class="info-item">
+            <div class="info-label">Status</div>
+            <div class="info-val">Open to Opportunities</div>
+          </div>
+        </div>
+      </div>
+      <div class="skills-panel reveal">
+        <div class="skill-category">
+          <div class="skill-cat-label">Tools &amp; Software</div>
+          <div class="skill-tags">
+            <span class="skill-tag tool">AutoCAD Electrical</span>
+            <span class="skill-tag tool">LabVIEW</span>
+            <span class="skill-tag tool">Proteus</span>
+            <span class="skill-tag tool">KiCAD</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-cat-label">Programming</div>
+          <div class="skill-tags">
+            <span class="skill-tag lang">C Program</span>
+          </div>
+        </div>
+        <div class="skill-category">
+          <div class="skill-cat-label">Areas of Interest</div>
+          <div class="skill-tags">
+            <span class="skill-tag">Power System</span>
+            <span class="skill-tag">Testing &amp; Validation</span>
+            <span class="skill-tag">Embedded Systems</span>
+            <span class="skill-tag">Designing</span>
+            <span class="skill-tag">IoT</span>
+            <span class="skill-tag">Industry 4.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Education -->
+<section id="education">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">02</span>
+      <h2 class="section-title">Education</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="timeline">
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">Nov 2022 – Present</div>
+        <div class="timeline-title">B.E Electrical &amp; Electronics Engineering</div>
+        <div class="timeline-sub">K S Rangasamy College of Technology · Tiruchengode</div>
+        <span class="timeline-badge">CGPA: 8.23</span>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">May 2022</div>
+        <div class="timeline-title">Higher Secondary Certificate (HSC)</div>
+        <div class="timeline-sub">Sri Vidya Mandir Matric Higher Secondary School · Palacode</div>
+        <span class="timeline-badge">77.1%</span>
+      </div>
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-date">May 2020</div>
+        <div class="timeline-title">SSLC</div>
+        <div class="timeline-sub">The Dharmapuri District Co-operative Matriculation School · Palacode</div>
+        <span class="timeline-badge">82.8%</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">03</span>
+      <h2 class="section-title">Projects</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="projects-grid">
+      <div class="project-card reveal">
+        <div class="project-num">// 001</div>
+        <div class="project-title">Smart Plug Charger</div>
+        <p class="project-desc">An Arduino-based smart power outlet using a potentiometer and relay system for automatic appliance control and efficient energy usage.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">// 002</div>
+        <div class="project-title">Smart Substation Feeder Monitoring &amp; Protection System</div>
+        <p class="project-desc">Automatically detects overcurrent and undervoltage conditions and disconnects the feeder using a relay-based protection mechanism.</p>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">// 003</div>
+        <div class="project-title">UPS System for Home Usage — LabVIEW</div>
+        <p class="project-desc">A graphical LabVIEW simulation of a home UPS system that monitors battery levels and seamlessly transitions to backup power during outages.</p>
+        <div class="project-award">🏆 Best Paper Award · IEEE Publication · Patent Filed</div>
+      </div>
+      <div class="project-card reveal">
+        <div class="project-num">// 004</div>
+        <div class="project-title">Smoke Monitoring System</div>
+        <p class="project-desc">An MQ-2 smoke sensor-based monitoring system that detects smoke and harmful gases, then sends real-time alerts and notifications.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">04</span>
+      <h2 class="section-title">Experience</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="exp-grid">
+      <div class="exp-card reveal">
+        <div class="exp-period">Jan 2026 – Present</div>
+        <div>
+          <div class="exp-role">Hardware Engineer Intern</div>
+          <div class="exp-company">Rennova Solutions · Hosur</div>
+          <div class="exp-desc">Design and development of Automated Test Equipment (ATE) machines for industrial applications.</div>
+        </div>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-period">Jul 2024</div>
+        <div>
+          <div class="exp-role">Engineering Intern</div>
+          <div class="exp-company">Retaw Pumps · Coimbatore</div>
+          <div class="exp-desc">Two-week industrial internship gaining hands-on experience in pump systems and industrial engineering.</div>
+        </div>
+      </div>
+      <div class="exp-card reveal">
+        <div class="exp-period">Jun – Jul 2023</div>
+        <div>
+          <div class="exp-role">Cyber Security Intern (Virtual)</div>
+          <div class="exp-company">Cisco · AICTE Programme · Online</div>
+          <div class="exp-desc">Completed a virtual internship focused on cybersecurity fundamentals through the Cisco AICTE initiative.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Recognition -->
+<section id="recognition">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">05</span>
+      <h2 class="section-title">Recognition</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="recognition-grid">
+      <div class="recog-block">
+        <div class="recog-block-title">Awards</div>
+        <div class="recog-item reveal">
+          <div class="recog-icon">🏆</div>
+          <div class="recog-title">Best Paper Award</div>
+          <div class="recog-detail">National Conference at Kongu Engineering College for the paper titled "UPS System for Home Usage using LabVIEW" — March 2025.</div>
+        </div>
+        <div class="recog-block-title" style="margin-top:1.5rem">Patent</div>
+        <div class="recog-item patent reveal">
+          <div class="recog-icon">⚡</div>
+          <div class="recog-title">Patent Filed</div>
+          <div class="recog-detail">LabVIEW Integrated UPS Monitoring and Battery Health Management</div>
+          <div class="recog-tag">App ID: 202541113550</div>
+        </div>
+      </div>
+      <div class="recog-block">
+        <div class="recog-block-title">Publication</div>
+        <div class="recog-item pub reveal">
+          <div class="recog-icon">📄</div>
+          <div class="recog-title">IEEE XPLORE Publication</div>
+          <div class="recog-detail">"UPS Monitoring and Battery Level Management System using LabVIEW" — Published October 2025. Preceded by Best Paper Award at national conference.</div>
+          <div class="recog-tag">IEEE Indexed</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Certifications -->
+<section id="certifications">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">06</span>
+      <h2 class="section-title">Certifications</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="cert-grid">
+      <div class="cert-card reveal">
+        <div class="cert-org">Internshala</div>
+        <div class="cert-name">LabVIEW Certified — 8 Week Course + Exam</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-org">ASDC · PMKVY</div>
+        <div class="cert-name">Electric Vehicle Maintenance — Grade A</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-org">NPTEL</div>
+        <div class="cert-name">Introduction to Internet of Things — Elite</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-org">NPTEL</div>
+        <div class="cert-name">Introduction to Industry 4.0 &amp; Industrial IoT</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-org">NPTEL</div>
+        <div class="cert-name">Cloud Computing</div>
+      </div>
+      <div class="cert-card reveal">
+        <div class="cert-org">One Credit Course</div>
+        <div class="cert-name">LabVIEW · AutoCAD Electrical · Revit MEP</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Activities -->
+<section id="activities">
+  <div class="section-wrap">
+    <div class="section-header">
+      <span class="section-num">07</span>
+      <h2 class="section-title">Activities</h2>
+      <div class="section-line"></div>
+    </div>
+    <div class="activities-cols">
+      <div class="reveal">
+        <div class="act-group-title">Co-Curricular</div>
+        <div class="act-item">Authored and presented at ICESC 2025, Hindusthan Institute of Technology, Coimbatore.</div>
+        <div class="act-item">Delivered a technical presentation on Quantum Computing advancements at Sri Ramakrishna Engineering College.</div>
+        <div class="act-item">Participated in Hackathon 1.0 at SRM University, developing a functional Smart Dustbin prototype.</div>
+        <div class="act-item">Attended an IoT hardware &amp; application development workshop at Bannari Amman Institute of Technology.</div>
+        <div class="act-item">Participated in a Web Designing Competition organized by Open Weaver Studio.</div>
+      </div>
+      <div class="reveal">
+        <div class="act-group-title">Extra-Curricular &amp; Leadership</div>
+        <div class="act-item">NSS Volunteer (2022–2024): community outreach and development programmes.</div>
+        <div class="act-item">Co-Convenor, Institutions Innovation Council (IIC) — coordinating innovation &amp; entrepreneurship activities.</div>
+        <div class="act-item">Core Committee Member, IGEN Green College Initiative.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <h2 class="contact-heading">Let's <span style="color:var(--accent)">Connect</span></h2>
+  <p class="contact-sub">Open to full-time roles, internships, and collaborations in EEE, embedded systems &amp; power.</p>
+  <div class="contact-links">
+    <a href="mailto:mohankumark1104@gmail.com" class="contact-link">
+      <span class="icon">✉</span> mohankumark1104@gmail.com
+    </a>
+    <a href="tel:+919361735108" class="contact-link">
+      <span class="icon">📞</span> +91 9361735108
+    </a>
+    <a href="https://linkedin.com/in/mohankumar-k11" target="_blank" class="contact-link">
+      <span class="icon">in</span> linkedin.com/in/mohankumar-k11
+    </a>
+  </div>
+</section>
+
+<footer>
+  © 2025 Mohankumar K · Crafted with precision · Dharmapuri, Tamil Nadu
+</footer>
+
+<script>
+  // Custom cursor
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+    setTimeout(() => {
+      ring.style.left = e.clientX + 'px';
+      ring.style.top = e.clientY + 'px';
+    }, 80);
+  });
+  document.querySelectorAll('a, button').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      cursor.style.width = '6px';
+      cursor.style.height = '6px';
+      ring.style.width = '60px';
+      ring.style.height = '60px';
+    });
+    el.addEventListener('mouseleave', () => {
+      cursor.style.width = '12px';
+      cursor.style.height = '12px';
+      ring.style.width = '40px';
+      ring.style.height = '40px';
+    });
+  });
+
+  // Reveal on scroll
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, (entry.target.dataset.delay || 0));
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+
+  reveals.forEach((el, i) => {
+    el.dataset.delay = (i % 4) * 100;
+    observer.observe(el);
+  });
+
+  // Nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-links a');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(s => {
+      if (window.scrollY >= s.offsetTop - 200) current = s.id;
+    });
+    navLinks.forEach(a => {
+      a.style.color = a.getAttribute('href') === '#' + current ? 'var(--accent)' : '';
+    });
+  });
+</script>
+</body>
+</html>
